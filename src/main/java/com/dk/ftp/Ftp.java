@@ -51,7 +51,6 @@ public class Ftp {
 		//在控制打印出目录
 		try {
 			FTPClient ftp = getFtp();
-			//必须，否则获取不到文件
 			//更换目录
 			ftp.changeWorkingDirectory("htdocs");
 //			FTPFile[] lists = ftp.listFiles();//便利该目录下的所有文件
@@ -107,6 +106,7 @@ public class Ftp {
 		ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
 		ftp.connect("");
 		ftp.login("", "");
+		//必须，否则获取不到文件
 		ftp.enterLocalPassiveMode();
 		return ftp;
 	}

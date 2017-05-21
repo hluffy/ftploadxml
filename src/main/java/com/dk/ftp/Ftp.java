@@ -1,13 +1,18 @@
 package com.dk.ftp;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.SocketException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.net.PrintCommandListener;
@@ -45,8 +50,44 @@ public class Ftp {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		} 
-		String path = "myfolder/shangqixml/INSPECT_1494467231005.xml";
-		savePqiaData(path);
+//		String path = "myfolder/shangqixml/INSPECT_1494467231005.xml";
+//		savePqiaData(path);
+		String path = "myfolder/shangqixml";
+		FTPClient ftp = null;
+		try {
+			ftp = getFtp();
+			ftp.changeWorkingDirectory(path);
+			FTPFile[] listFiles = ftp.listFiles();
+			List<String> names = getFileName();
+			for (FTPFile ftpFile : listFiles) {
+				String name = ftpFile.getName().trim();
+				if(!names.contains(name)){
+					ftp.disconnect();
+					ftp = getFtp();
+					ftp.changeWorkingDirectory(path);
+					System.out.println(ftpFile.getName());
+					InputStream ins = ftp.retrieveFileStream(name);
+					ins.close();
+					writeFile(name);
+				}
+			}
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			if(ftp!=null){
+				try {
+					ftp.disconnect();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
 	}
 	
 	//保存到数据库
@@ -166,6 +207,43 @@ public class Ftp {
 		//必须，否则获取不到文件
 		ftp.enterLocalPassiveMode();
 		return ftp;
+	}
+	
+	public static List<String> getFileName(){
+		List<String> names = new ArrayList<String>();
+		try {
+			FileReader reader = new FileReader("D://saved.txt");
+			BufferedReader br = new BufferedReader(reader);
+//			String name = br.readLine();
+			String name = null;
+			while((name=br.readLine())!=null){
+				System.out.println(name);
+				names.add(name.trim());
+			}
+//			names.add(name);
+			
+			br.close();
+			reader.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return names;
+	}
+	
+	public static void writeFile(String str){
+		try {
+			FileWriter fileWriter = new FileWriter("D://saved.txt",true);
+			BufferedWriter bw = new BufferedWriter(fileWriter);
+			bw.write(str.trim()+"\r\n");
+//			bw.newLine();
+			
+			bw.close();
+			fileWriter.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

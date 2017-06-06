@@ -30,6 +30,21 @@ public class Ftp {
 	public static void main(String[] args){
 //		String fileName = "D:/test.txt";
 //		System.out.println(uploadFile(fileName));
+		
+		
+		try {
+			FTPClient ftp = getFtp();
+			ftp.changeWorkingDirectory("/myfolder/shangqi2/");
+			FTPFile[] files = ftp.listFiles();
+			for (FTPFile file : files) {
+				System.out.println(file.getName());
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 //		System.out.println(downloadFile());
 		
 //		InputStream ins = null;
@@ -50,55 +65,61 @@ public class Ftp {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		} 
-//		String path = "myfolder/shangqixml/INSPECT_1494467231005.xml";
+//		String path = "myfolder/shangqixml/INSPECT20170511_1494467692201.xml";
+//		String path = "C:/Users/carol/Desktop/shangqixml/INSPECT20170511_1494467692201.xml";
 //		savePqiaData(path);
-		String path = "myfolder/shangqixml";
-		FTPClient ftp = null;
-		try {
-			ftp = getFtp();
-			ftp.changeWorkingDirectory(path);
-			FTPFile[] listFiles = ftp.listFiles();
-			List<String> names = getFileName();
-			for (FTPFile ftpFile : listFiles) {
-				String name = ftpFile.getName().trim();
-				if(!names.contains(name)){
-					ftp.disconnect();
-					ftp = getFtp();
-					ftp.changeWorkingDirectory(path);
-					System.out.println(ftpFile.getName());
-					InputStream ins = ftp.retrieveFileStream(name);
-					ins.close();
-					writeFile(name);
-				}
-			}
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally{
-			if(ftp!=null){
-				try {
-					ftp.disconnect();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
+//		System.out.println("保存成功");
+		/////////////////////////////////////////////////
+//		String path = "myfolder/shangqixml";
+//		FTPClient ftp = null;
+//		try {
+//			ftp = getFtp();
+//			ftp.changeWorkingDirectory(path);
+//			FTPFile[] listFiles = ftp.listFiles();
+//			List<String> names = getFileName();
+//			for (FTPFile ftpFile : listFiles) {
+//				String name = ftpFile.getName().trim();
+//				if(!names.contains(name)){
+//					ftp.disconnect();
+//					ftp = getFtp();
+//					ftp.changeWorkingDirectory(path);
+//					System.out.println(ftpFile.getName());
+//					InputStream ins = ftp.retrieveFileStream(name);
+//					savePqiaData(path+name,ins);
+//					ins.close();
+//					
+//					
+//					writeFile(name);
+//				}
+//			}
+//		} catch (SocketException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} finally{
+//			if(ftp!=null){
+//				try {
+//					ftp.disconnect();
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//		}
 		
 	}
 	
 	//保存到数据库
 	@SuppressWarnings("unchecked")
-	public static void savePqiaData(String path){
-		InputStream ins = null;
+	public static void savePqiaData(String path,InputStream ins){
 		PQIADataService service = new PQIADataServiceImpl();
 		try {
 			SAXReader saxReader = new SAXReader();
-			FTPClient ftp = getFtp();
-			ins = ftp.retrieveFileStream(path);
+//			FTPClient ftp = getFtp();
+//			ins = ftp.retrieveFileStream(path);
+//			ins = new FileInputStream(path);
 			Document doc = saxReader.read(ins);
 			Element root = doc.getRootElement();
 			List<Element> datas = root.elements("DEFECT_DATA");
@@ -126,14 +147,15 @@ public class Ftp {
 				info.setDutyDept(ele.elementTextTrim("DUTY_DEPT"));
 				info.setFixingName(ele.elementTextTrim("FIXING_NAME"));
 				info.setConfirmSite(ele.elementTextTrim("CONFIRM_SITE"));
-				info.setConfirmTime(Timestamp.valueOf(ele.elementTextTrim("CONFIRM_TIME")));
+//				info.setConfirmTime(Timestamp.valueOf(ele.elementTextTrim("CONFIRM_TIME")));
 				info.setConfirmUser(ele.elementTextTrim("CONFIRM_USER"));
 				info.setRepairUser(ele.elementTextTrim("REPAIR_USER"));
-				info.setRepairTime(Timestamp.valueOf(ele.elementTextTrim("REPAIR_TIME")));
+//				info.setRepairTime(Timestamp.valueOf(ele.elementTextTrim("REPAIR_TIME")));
 				info.setRepairContent(ele.elementTextTrim("REPAIR_CONTENT"));
 				info.setSiteRepair(ele.elementTextTrim("SITE_REPAIR"));
 				
 				service.addInfo(info);
+				System.out.println("保存成功");
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -175,11 +197,11 @@ public class Ftp {
 			File file = new File(fileName);
 			fis = new FileInputStream(file);
 			//上传文件
-			ftp.changeWorkingDirectory("/myfolder/");
+			ftp.changeWorkingDirectory("/myfolder/shangqi2/");
 //			ftp.setBufferSize(1024);
 //			ftp.setControlEncoding("UTF-8");
 //			ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
-			result = ftp.storeFile(new String("/myfolder/test1.txt".getBytes("UTF-8"),"iso-8859-1"), fis);
+			result = ftp.storeFile(new String("test.txt".getBytes("UTF-8"),"iso-8859-1"), fis);
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -203,7 +225,7 @@ public class Ftp {
 		FTPClient ftp = new FTPClient();
 		ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
 		ftp.connect("bxu2442210613.my3w.com");
-		ftp.login("bxu2442210613", "");
+		ftp.login("bxu2442210613", "xiaohanxiaohan");
 		//必须，否则获取不到文件
 		ftp.enterLocalPassiveMode();
 		return ftp;

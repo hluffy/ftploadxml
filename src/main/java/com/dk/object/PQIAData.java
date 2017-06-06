@@ -4,10 +4,11 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 public class PQIAData implements Serializable{
-/**
+
+	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5131455456718791296L;
+	private static final long serialVersionUID = 4170081688205231501L;
 	//	SHIFT 班次
 //	DEFECT_STATUS 缺陷状态
 //	DR_FLAG 缺陷来源

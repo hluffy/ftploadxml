@@ -48,7 +48,7 @@ public class FtpMain {
 		
 		String host = "bxu2442210613.my3w.com";
 		String username = "bxu2442210613";
-		String password = "xiaohanxiaohan";
+		String password = "";
 		runFtp(host, username, password);
 	}
 	

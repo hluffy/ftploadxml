@@ -24,27 +24,31 @@ import com.dk.object.PQIAInfo;
 import com.dk.result.Result;
 import com.dk.service.PQIADataService;
 import com.dk.serviceimpl.PQIADataServiceImpl;
+import com.dk.serviceimpl.PQIAInfoServiceImpl;
 
 public class FtpMain {
 	public static void main(String[] args) {
-		if(args.length<3){
-			System.out.println("please input full path!");
-			System.exit(0);
-		}
-		final String host = args[0];
-		final String username = args[1];
-		final String password = args[2];
+//		if(args.length<3){
+//			System.out.println("please input full path!");
+//			System.exit(0);
+//		}
+//		final String host = args[0];
+//		final String username = args[1];
+//		final String password = args[2];
+//		
+//		Timer timer = new Timer();
+//		timer.schedule(new TimerTask() {
+//			
+//			@Override
+//			public void run() {
+//				// TODO Auto-generated method stub
+//				runFtp(host, username, password);
+//			}
+//		}, 15*60*1000);
 		
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				runFtp(host, username, password);
-			}
-		}, 15*60*1000);
-		
+		String host = "bxu2442210613.my3w.com";
+		String username = "bxu2442210613";
+		String password = "xiaohanxiaohan";
 		runFtp(host, username, password);
 	}
 	
@@ -128,7 +132,7 @@ public class FtpMain {
 		@SuppressWarnings("unchecked")
 		public static Result savePqiaData(InputStream ins){
 			Result result = new Result();
-			PQIADataService service = new PQIADataServiceImpl();
+			PQIADataService service = new PQIAInfoServiceImpl();
 			try {
 				SAXReader saxReader = new SAXReader();
 //				FTPClient ftp = getFtp();

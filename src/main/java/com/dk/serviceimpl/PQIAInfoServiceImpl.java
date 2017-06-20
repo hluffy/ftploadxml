@@ -19,7 +19,7 @@ public class PQIAInfoServiceImpl implements PQIADataService{
 		PreparedStatement ps = null;
 		try {
 //			String sql = "insert into pqiadata(shift,defect_status,dr_flag,difference,defect_level,create_user,create_time,vin,tps,series,material,csn_body,defect_mode_name,defect_type,site,location_name,part_name_third,custom_name_cn,custom_name_en,duty_dept,fixing_name,confirm_site,confirm_time,confirm_user,repair_user,repair_time,repair_content,site_repair) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-			String sql = "insert into pqiadata(vin,tps,series,material,csn_body,csn_paint,csn_assembly,defect_mode_name,defect_type,site,fixing_name,location_name,part_name_first,part_name_secont,part_name_third,part_name_match,custom_name_cn,custom_name_en,shift,defect_status,dr_flag,duty_dept,defect_point,difference,defect_level,lost_assembly,shift_group,cause_type,dr_cause_type,property_one,property_two,property_three,property_four,property_five,property_six,property_seven,property_eight,duty_user,create_user,create_time,delete_cause,delete_time,delete_user,update_cause,update_time,update_user,back_cause,back_time,back_user,confirm_site,confirm_time,confirm_user,repair_user,repair_time,repair_content,repair_type,site_repair,repair_area,rework_time,repair_measures,repair_step_type,repair_duty_dept,repair_line_name,field_one,field_two,field_three,field_four,field_five) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String sql = "insert into pqpaiadatacar(vin,tps,series,material,csn_body,csn_paint,csn_assembly,defect_mode_name,defect_type,site,fixing_name,location_name,part_name_first,part_name_secont,part_name_third,part_name_match,custom_name_cn,custom_name_en,shift,defect_status,dr_flag,duty_dept,defect_point,difference,defect_level,lost_assembly,shift_group,cause_type,dr_cause_type,property_one,property_two,property_three,property_four,property_five,property_six,property_seven,property_eight,duty_user,create_user,create_time,delete_cause,delete_time,delete_user,update_cause,update_time,update_user,back_cause,back_time,back_user,confirm_site,confirm_time,confirm_user,repair_user,repair_time,repair_content,repair_type,site_repair,repair_area,rework_time,repair_measures,repair_step_type,repair_duty_dept,repair_line_name,field_one,field_two,field_three,field_four,field_five) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			conn = DBUtil.getConnection();
 			ps = conn.prepareStatement(sql);
 			
@@ -86,7 +86,13 @@ public class PQIAInfoServiceImpl implements PQIADataService{
 			ps.setString(56, info.getRepairType());
 			ps.setString(57, info.getSiteRepair());
 			ps.setString(58, info.getRepairArea());
-			ps.setInt(59, info.getReworkTime());
+			Integer reworkTime = info.getReworkTime();
+			if(reworkTime!=null){
+				ps.setInt(59, info.getReworkTime());
+			}else{
+				ps.setInt(59, 0);
+			}
+			
 			ps.setString(60, info.getRepairMeasures());
 			ps.setString(61, info.getRepairStepType());
 			ps.setString(62, info.getRepairDutyDept());

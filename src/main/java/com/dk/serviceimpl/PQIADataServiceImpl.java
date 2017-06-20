@@ -5,13 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.dk.object.PQIAData;
+import com.dk.object.PQIAInfo;
 import com.dk.result.Result;
 import com.dk.service.PQIADataService;
 import com.dk.util.DBUtil;
 
 public class PQIADataServiceImpl implements PQIADataService{
 
-	public Result addInfo(PQIAData info) {
+	public Result addInfo(PQIAInfo info) {
 		// TODO Auto-generated method stub
 		Result result = new Result();
 		Connection conn = null;
@@ -24,7 +25,7 @@ public class PQIADataServiceImpl implements PQIADataService{
 			ps.setString(1, info.getShift());
 			ps.setString(2, info.getDefectStatus());
 			ps.setString(3, info.getDrFlag());
-			ps.setString(4, info.getDifference());
+//			ps.setString(4, info.getDifference());
 			ps.setString(5, info.getDefectLevel());
 			ps.setString(6, info.getCreateUser());
 			ps.setTimestamp(7, info.getCreateTime());

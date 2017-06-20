@@ -22,7 +22,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import com.dk.object.PQIAData;
+import com.dk.object.PQIAInfo;
 import com.dk.service.PQIADataService;
 import com.dk.serviceimpl.PQIADataServiceImpl;
 
@@ -124,7 +124,7 @@ public class Ftp {
 			Element root = doc.getRootElement();
 			List<Element> datas = root.elements("DEFECT_DATA");
 			for (Element ele : datas) {
-				PQIAData info = new PQIAData();
+				PQIAInfo info = new PQIAInfo();
 				info.setShift(ele.elementTextTrim("SHIFT"));
 				info.setDefectStatus(ele.elementTextTrim("DEFECT_STATUS"));
 				info.setDrFlag(ele.elementTextTrim("DR_FLAG"));

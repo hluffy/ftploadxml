@@ -46,23 +46,37 @@ public class FtpMain {
 //			}
 //		}, 15*60*1000);
 		
-		String host = "bxu2442210613.my3w.com";
-		String username = "bxu2442210613";
-		String password = "";
-		runFtp(host, username, password);
+		final String host1 = "10.91.235.156/INTERFACE/MES_INSPECT/QA01_DEFECT_INFO/2200";
+		final String host2 = "10.91.235.156/INTERFACE/MES_INSPECT/QA01_DEFECT_INFO/ARCHIVE";
+		final String username = "lgmg2in1_lg";
+		final String password = "lgmg2in1_lg";
+//		String host = "bxu2442210613.my3w.com";
+//		String username = "bxu2442210613";
+//		String password = "";
+		runFtp(host1,host2, username, password);
+//		Timer timer = new Timer();
+//		timer.schedule(new TimerTask() {
+//			
+//			@Override
+//			public void run() {
+//				// TODO Auto-generated method stub
+//				runFtp(host1,host2, username, password);
+//			}
+//		}, 14*60*1000);
 	}
 	
-	public static void runFtp(String host,String username,String password){
+	public static void runFtp(String host1,String host2,String username,String password){
 		InputStream ins = null;
-		String path = "D:/shangqi/";
+		String path = "C:/shangqi/";
 		try {
 //			String host ="bxu2442210613.my3w.com";
 //			String username ="bxu2442210613";
 //			String password ="xiaohanxiaohan";
 			
-			FTPClient ftp = getFtp(host,username,password);
+//			FTPClient ftp = getFtp(host,username,password);
+			FTPClient ftp = getFtp(host2,username,password);
 			
-			ftp.changeWorkingDirectory("/myfolder/shangqi2/");
+//			ftp.changeWorkingDirectory("/myfolder/shangqi2/");
 //			ftp.changeWorkingDirectory("/INTERFACE/MES_INSPECT/QA01_DEFECT_INFO/2200/");
 			List<String> savedFile = new ArrayList<String>();
 			FTPFile[] shangqi2files = ftp.listFiles();
@@ -71,31 +85,31 @@ public class FtpMain {
 			}
 			
 			ftp.disconnect();
-			ftp = getFtp(host,username,password);
-			ftp.changeWorkingDirectory("/myfolder/shangqixml");
+			ftp = getFtp(host1,username,password);
+//			ftp.changeWorkingDirectory("/myfolder/shangqixml");
 //			ftp.changeWorkingDirectory("/INTERFACE/MES_INSPECT/QA01_DEFECT_INFO/2200/");
 			FTPFile[] listFiles = ftp.listFiles();
 			for (FTPFile fileName : listFiles) {
 				String name = fileName.getName();
 				if(!savedFile.contains(name)){
 					ftp.disconnect();
-					ftp = getFtp(host,username,password);
-					ftp.changeWorkingDirectory("/myfolder/shangqixml");
+					ftp = getFtp(host1,username,password);
+//					ftp.changeWorkingDirectory("/myfolder/shangqixml");
 //					ftp.changeWorkingDirectory("/INTERFACE/MES_INSPECT/QA01_DEFECT_INFO/2200/");
 					ins = ftp.retrieveFileStream(name);
 					ftp.disconnect();
 					if(ins!=null){
 						Result result = savePqiaData(ins);
 						if(result.isStatus()){
-							ftp = getFtp(host, username, password);
-							ftp.changeWorkingDirectory("/myfolder/shangqixml");
+							ftp = getFtp(host1, username, password);
+//							ftp.changeWorkingDirectory("/myfolder/shangqixml");
 							boolean flag = ftp.retrieveFile(name,new FileOutputStream(path+name));
 							ftp.disconnect();
 							if(flag){
 								File file = new File(path+name);
 								FileInputStream fis  = new FileInputStream(file);
-								ftp = getFtp(host, username, password);
-								ftp.changeWorkingDirectory("/myfolder/shangqi2/");
+								ftp = getFtp(host2, username, password);
+//								ftp.changeWorkingDirectory("/myfolder/shangqi2/");
 								boolean success = ftp.storeFile(new String(name.getBytes("UTF-8"),"iso-8859-1"), fis);
 								ftp.disconnect();
 								if(success){

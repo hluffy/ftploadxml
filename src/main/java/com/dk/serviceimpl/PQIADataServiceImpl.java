@@ -10,7 +10,7 @@ import com.dk.result.Result;
 import com.dk.service.PQIADataService;
 import com.dk.util.DBUtil;
 
-public class PQIADataServiceImpl implements PQIADataService{
+public class PQIADataServiceImpl{
 
 	public Result addInfo(PQIAInfo info) {
 		// TODO Auto-generated method stub

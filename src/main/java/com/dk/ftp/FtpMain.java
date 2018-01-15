@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.SocketException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -50,34 +53,34 @@ public class FtpMain {
 		final String host2 = "10.91.235.156/INTERFACE/MES_INSPECT/QA01_DEFECT_INFO/ARCHIVE";
 		final String username = "lgmg2in1_lg";
 		final String password = "lgmg2in1_lg";
+		
+//		final String host1 = "ftp://bxw2713550723.my3w.com/PQIA_DPS/QA01_DEFECT_INFO/LG/";
+//		final String host2 = "ftp://bxw2713550723.my3w.com/PQIA_DPS/QA01_DEFECT_INFO/LG/Archive/";
 //		String host = "bxu2442210613.my3w.com";
 //		String username = "bxu2442210613";
 //		String password = "";
 		runFtp(host1,host2, username, password);
-//		Timer timer = new Timer();
-//		timer.schedule(new TimerTask() {
-//			
-//			@Override
-//			public void run() {
-//				// TODO Auto-generated method stub
-//				runFtp(host1,host2, username, password);
-//			}
-//		}, 14*60*1000);
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				runFtp(host1,host2, username, password);
+			}
+		}, 0, 14*60*1000);
 	}
 	
 	public static void runFtp(String host1,String host2,String username,String password){
 		InputStream ins = null;
 		String path = "C:/shangqi/";
+		FTPClient ftp = null;
 		try {
-//			String host ="bxu2442210613.my3w.com";
-//			String username ="bxu2442210613";
-//			String password ="xiaohanxiaohan";
 			
-//			FTPClient ftp = getFtp(host,username,password);
-			FTPClient ftp = getFtp(host2,username,password);
+			ftp = getFtp(host2,username,password);
 			
-//			ftp.changeWorkingDirectory("/myfolder/shangqi2/");
-//			ftp.changeWorkingDirectory("/INTERFACE/MES_INSPECT/QA01_DEFECT_INFO/2200/");
+			ftp.changeWorkingDirectory("/PQIA_DPS/QA01_DEFECT_INFO/LG/Archive/");
+			
 			List<String> savedFile = new ArrayList<String>();
 			FTPFile[] shangqi2files = ftp.listFiles();
 			for (FTPFile ftpFile : shangqi2files) {
@@ -86,45 +89,64 @@ public class FtpMain {
 			
 			ftp.disconnect();
 			ftp = getFtp(host1,username,password);
-//			ftp.changeWorkingDirectory("/myfolder/shangqixml");
-//			ftp.changeWorkingDirectory("/INTERFACE/MES_INSPECT/QA01_DEFECT_INFO/2200/");
+			ftp.changeWorkingDirectory("/PQIA_DPS/QA01_DEFECT_INFO/LG/");
 			FTPFile[] listFiles = ftp.listFiles();
 			for (FTPFile fileName : listFiles) {
-				String name = fileName.getName();
-				if(!savedFile.contains(name)){
-					ftp.disconnect();
-					ftp = getFtp(host1,username,password);
-//					ftp.changeWorkingDirectory("/myfolder/shangqixml");
-//					ftp.changeWorkingDirectory("/INTERFACE/MES_INSPECT/QA01_DEFECT_INFO/2200/");
-					ins = ftp.retrieveFileStream(name);
-					ftp.disconnect();
-					if(ins!=null){
-						Result result = savePqiaData(ins);
-						if(result.isStatus()){
-							ftp = getFtp(host1, username, password);
-//							ftp.changeWorkingDirectory("/myfolder/shangqixml");
-							boolean flag = ftp.retrieveFile(name,new FileOutputStream(path+name));
-							ftp.disconnect();
-							if(flag){
-								File file = new File(path+name);
-								FileInputStream fis  = new FileInputStream(file);
-								ftp = getFtp(host2, username, password);
-//								ftp.changeWorkingDirectory("/myfolder/shangqi2/");
-								boolean success = ftp.storeFile(new String(name.getBytes("UTF-8"),"iso-8859-1"), fis);
+				if(!fileName.isDirectory()){
+					String name = fileName.getName();
+					if(!savedFile.contains(name)){
+						ftp.disconnect();
+						ftp = getFtp(host1,username,password);
+						ftp.changeWorkingDirectory("/PQIA_DPS/QA01_DEFECT_INFO/LG/");
+						ins = ftp.retrieveFileStream(name);
+						ftp.disconnect();
+						if(ins!=null){
+							Result result = savePqiaData(ins);
+							System.out.println(result.isStatus());
+							if(result.isStatus()){
+								ftp = getFtp(host1, username, password);
+								ftp.changeWorkingDirectory("/PQIA_DPS/QA01_DEFECT_INFO/LG/");
+								System.out.println(path+name);
+								boolean flag = ftp.retrieveFile(name,new FileOutputStream(path+name));
+								
+								//删除文件
+//								ftp.deleteFile(fileName.getName());
+								
 								ftp.disconnect();
-								if(success){
-									System.out.println("保存成功");
-								}else{
-									System.out.println("保存失败");
+								if(flag){
+									File file = new File(path+name);
+									FileInputStream fis  = new FileInputStream(file);
+									ftp = getFtp(host2, username, password);
+									ftp.changeWorkingDirectory("/PQIA_DPS/QA01_DEFECT_INFO/LG/Archive/");
+									boolean success = ftp.storeFile(new String(name.getBytes("UTF-8"),"iso-8859-1"), fis);
+//									file.delete();
+									fis.close();
+									ftp.disconnect();
+									if(success){
+										System.out.println(name+"保存成功");
+									}else{
+										System.out.println(name+"保存失败");
+									}
 								}
 							}
 						}
 					}
 				}
+				
 			}
+//			ftp.disconnect();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally{
+			if(ftp!=null){
+				try {
+					ftp.disconnect();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	
@@ -132,9 +154,15 @@ public class FtpMain {
 		FTPClient ftp = new FTPClient();
 		ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
 //		ftp.connect("bxu2442210613.my3w.com");
-		ftp.connect(host);
+//		ftp.connect(host);
+		
+//		InetAddress i = InetAddress.getByName(host);
+//		String ip = i.getHostAddress();
+//		ftp.connect(ip);
+		
 //		ftp.connect("ftp://10.91.235.156");
 //		ftp.login("bxu2442210613", "");
+		ftp.connect(host);
 		ftp.login(username, password);
 //		ftp.login("lgmg2in1_lg", "lgmg2in1_lg");
 		//必须，否则获取不到文件

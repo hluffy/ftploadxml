@@ -114,57 +114,57 @@ public class Ftp {
 	//保存到数据库
 	@SuppressWarnings("unchecked")
 	public static void savePqiaData(String path,InputStream ins){
-		PQIADataService service = new PQIADataServiceImpl();
-		try {
-			SAXReader saxReader = new SAXReader();
-//			FTPClient ftp = getFtp();
-//			ins = ftp.retrieveFileStream(path);
-//			ins = new FileInputStream(path);
-			Document doc = saxReader.read(ins);
-			Element root = doc.getRootElement();
-			List<Element> datas = root.elements("DEFECT_DATA");
-			for (Element ele : datas) {
-				PQIAInfo info = new PQIAInfo();
-				info.setShift(ele.elementTextTrim("SHIFT"));
-				info.setDefectStatus(ele.elementTextTrim("DEFECT_STATUS"));
-				info.setDrFlag(ele.elementTextTrim("DR_FLAG"));
-				info.setDifference(ele.elementTextTrim("DIFFERENCE"));
-				info.setDefectLevel(ele.elementTextTrim("DEFECT_LEVEL"));
-				info.setCreateUser(ele.elementTextTrim("CREATE_USER"));
-				info.setCreateTime(Timestamp.valueOf(ele.elementTextTrim("CREATE_TIME")));
-				info.setVin(ele.elementTextTrim("VIN"));
-				info.setTps(ele.elementTextTrim("TPS"));
-				info.setSeries(ele.elementTextTrim("SERIES"));
-				info.setMaterial(ele.elementTextTrim("MATERIAL"));
-				info.setCsnBody(ele.elementTextTrim("CSN_BODY"));
-				info.setDefectModeName(ele.elementTextTrim("DEFECT_MODE_NAME"));
-				info.setDefectType(ele.elementTextTrim("DEFECT_TYPE"));
-				info.setSite(ele.elementTextTrim("SITE"));
-				info.setLocationName(ele.elementTextTrim("LOCATION_NAME"));
-				info.setPartNameThird(ele.elementTextTrim("PART_NAME_THIRD"));
-				info.setCustomNameCn(ele.elementTextTrim("CUSTOM_NAME_CN"));
-				info.setCustomNameEn(ele.elementTextTrim("CUSTOM_NAME_EN"));
-				info.setDutyDept(ele.elementTextTrim("DUTY_DEPT"));
-				info.setFixingName(ele.elementTextTrim("FIXING_NAME"));
-				info.setConfirmSite(ele.elementTextTrim("CONFIRM_SITE"));
-				if(ele.elementTextTrim("CONFIRM_TIME")!=null&&!ele.elementTextTrim("CONFIRM_TIME").isEmpty()){
-					info.setConfirmTime(Timestamp.valueOf(ele.elementTextTrim("CONFIRM_TIME")));
-				}
-				info.setConfirmUser(ele.elementTextTrim("CONFIRM_USER"));
-				info.setRepairUser(ele.elementTextTrim("REPAIR_USER"));
-				if(ele.elementTextTrim("REPAIR_TIME")!=null&&!ele.elementTextTrim("REPAIR_TIME").isEmpty()){
-					info.setRepairTime(Timestamp.valueOf(ele.elementTextTrim("REPAIR_TIME")));
-				}
-				info.setRepairContent(ele.elementTextTrim("REPAIR_CONTENT"));
-				info.setSiteRepair(ele.elementTextTrim("SITE_REPAIR"));
-				
-				service.addInfo(info);
-				System.out.println("保存成功");
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		PQIADataService service = new PQIADataServiceImpl();
+//		try {
+//			SAXReader saxReader = new SAXReader();
+////			FTPClient ftp = getFtp();
+////			ins = ftp.retrieveFileStream(path);
+////			ins = new FileInputStream(path);
+//			Document doc = saxReader.read(ins);
+//			Element root = doc.getRootElement();
+//			List<Element> datas = root.elements("DEFECT_DATA");
+//			for (Element ele : datas) {
+//				PQIAInfo info = new PQIAInfo();
+//				info.setShift(ele.elementTextTrim("SHIFT"));
+//				info.setDefectStatus(ele.elementTextTrim("DEFECT_STATUS"));
+//				info.setDrFlag(ele.elementTextTrim("DR_FLAG"));
+//				info.setDifference(ele.elementTextTrim("DIFFERENCE"));
+//				info.setDefectLevel(ele.elementTextTrim("DEFECT_LEVEL"));
+//				info.setCreateUser(ele.elementTextTrim("CREATE_USER"));
+//				info.setCreateTime(Timestamp.valueOf(ele.elementTextTrim("CREATE_TIME")));
+//				info.setVin(ele.elementTextTrim("VIN"));
+//				info.setTps(ele.elementTextTrim("TPS"));
+//				info.setSeries(ele.elementTextTrim("SERIES"));
+//				info.setMaterial(ele.elementTextTrim("MATERIAL"));
+//				info.setCsnBody(ele.elementTextTrim("CSN_BODY"));
+//				info.setDefectModeName(ele.elementTextTrim("DEFECT_MODE_NAME"));
+//				info.setDefectType(ele.elementTextTrim("DEFECT_TYPE"));
+//				info.setSite(ele.elementTextTrim("SITE"));
+//				info.setLocationName(ele.elementTextTrim("LOCATION_NAME"));
+//				info.setPartNameThird(ele.elementTextTrim("PART_NAME_THIRD"));
+//				info.setCustomNameCn(ele.elementTextTrim("CUSTOM_NAME_CN"));
+//				info.setCustomNameEn(ele.elementTextTrim("CUSTOM_NAME_EN"));
+//				info.setDutyDept(ele.elementTextTrim("DUTY_DEPT"));
+//				info.setFixingName(ele.elementTextTrim("FIXING_NAME"));
+//				info.setConfirmSite(ele.elementTextTrim("CONFIRM_SITE"));
+//				if(ele.elementTextTrim("CONFIRM_TIME")!=null&&!ele.elementTextTrim("CONFIRM_TIME").isEmpty()){
+//					info.setConfirmTime(Timestamp.valueOf(ele.elementTextTrim("CONFIRM_TIME")));
+//				}
+//				info.setConfirmUser(ele.elementTextTrim("CONFIRM_USER"));
+//				info.setRepairUser(ele.elementTextTrim("REPAIR_USER"));
+//				if(ele.elementTextTrim("REPAIR_TIME")!=null&&!ele.elementTextTrim("REPAIR_TIME").isEmpty()){
+//					info.setRepairTime(Timestamp.valueOf(ele.elementTextTrim("REPAIR_TIME")));
+//				}
+//				info.setRepairContent(ele.elementTextTrim("REPAIR_CONTENT"));
+//				info.setSiteRepair(ele.elementTextTrim("SITE_REPAIR"));
+//				
+//				service.addInfo(info);
+//				System.out.println("保存成功");
+//			}
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 	}
 	
